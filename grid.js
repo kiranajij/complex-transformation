@@ -9,12 +9,12 @@ function createGrid() {
   strokeWeight(0.1);
   stroke(0, 150);
   
-  let req = width / spacing / 2;
+  let req = width / config.spacing / 2;
   
   for (let i = 1; i < req; i++) {
     
     // temporary variable
-    let f = spacing*i;
+    let f = config.spacing*i;
     
     // horizontal lines
     line(-width / 2, -f, width / 2, -f);

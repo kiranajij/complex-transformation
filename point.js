@@ -137,7 +137,12 @@ function renderPoints(points, col, label) {
   for (let p of points) {
 
     stroke(col);
-    point(p.re, -p.im);
+    limits = config.limits
+    let x, y
+    x = map(p.re, -limits, limits, -width/2, width/2);
+    y = map(p.im, -limits, limits, -width/2, width/2);
+
+    point(x, -y);
     if (label) {
       
       // display the cartesian coordinates
@@ -149,14 +154,17 @@ function renderPoints(points, col, label) {
       // let b = p.arg().toFixed(2);
       noStroke();
       text(a + "+i" + b,
-        p.re + 5, -p.im);
+        x + 5, -y);
     }
   }
 }
 
 function mousePressed() {
   // per mouse press, add the current point to the points array
-  let c = new Complex(mouseX - width / 2, -mouseY + height / 2);
+  let limits = config.limits
+  let re = map(mouseX, 0, width, -limits, limits)
+  let im = map(mouseY, 0, height, limits, -limits)
+  let c = new Complex(re, im);
   fillPoint(c);
 }
 
@@ -175,16 +183,35 @@ function fillPoint(z) {
 
 function autoFillPoints() {
   // auto fill the grid with points
-  let req = width / 2 / spacing + 1;
-  // fillPoint(new Complex(0, 0));
-  for (let i = 0; i < req; i++) {
-    for (let j = 0; j < req; j++) {
-      let x = i * spacing;
-      let y = j * spacing;
+  let n = width / 2 / config.spacing;
+  print(n)
+  let sp = config.limits / n;
+  for (let i = 0; i < n+1; i++) {
+    for (let j = 0; j < n+1; j++) {
+      let x = i*sp;
+      let y = j*sp;
       fillPoint(new Complex(x, y));
       fillPoint(new Complex(-x, y));
       fillPoint(new Complex(x, -y));
       fillPoint(new Complex(-x, -y));
     }
+  }
+}
+
+function clearPoints(){
+
+  // Clear all the points 
+
+  points = [];
+  tempPoints = [];
+  mappedPoints = [];
+
+}
+
+function keyPressed(){
+
+  if (key == 'c'){
+    clearPoints();
+    config.autoFill = false;
   }
 }
