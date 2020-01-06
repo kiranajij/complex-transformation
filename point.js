@@ -1,0 +1,190 @@
+class Complex {
+  /*
+  A class to act like complex number.
+  */
+  constructor(re, im) {
+    /*
+    the constructor takes two argument,
+    re: real part of the complex number,
+    im: imaginary part of the compelx number
+    */
+
+    this.re = re;
+    this.im = im;
+  }
+
+  abs() {
+    // return the absolute value
+    return sqrt(this.re * this.re +
+      this.im * this.im);
+  }
+
+  mag() {
+    // same as "abs"
+    return this.abs()
+  }
+
+  arg() {
+
+    // return the argument of the complex number
+
+    let re = this.re;
+    let im = this.im;
+
+    // handle 1/0 case, return PI/2 or -PI/2 accordingly
+    if (this.re == 0) {
+      if (this.im >= 0) return PI / 2;
+      else return -PI / 2;
+    }
+
+    // otherwise, the absolutevalue of the angle
+    let ang = abs(atan(this.im / float(this.re)));
+
+    if (re >= 0 && im >= 0) {
+      // quadrent 1
+      return ang;
+    } else if (re < 0 && im >= 0) {
+      // quadrent 2
+      return PI - ang;
+    } else if (re >= 0 && im < 0) {
+      // quadrent 4
+      return -ang;
+    } else if (re < 0 && im < 0) {
+      // quadrent 3
+      return -PI + ang;
+    }
+  }
+
+  add(other) {
+    // add this and other number and return the result
+    return new Complex(this.re + other.re, this.im + other.im);
+  }
+  sub(other) {
+    // substract this and the other number and return the result
+    return new Complex(this.re - other.re, this.im - other.im);
+  }
+  mul(other) {
+    // multiply this and other number and return
+    let r = this.re * other.re - this.im * other.im;
+    let i = this.re * other.im + this.im * other.re;
+    return new Complex(r, i);
+  }
+
+  inv() {
+    // return the inverse of this number
+
+    // if z = 0, return null because no inverse exist
+    if (this.re == 0 && this.im == 0) {
+      return null;
+    }
+
+    // 1/z = z'/zz' = z'/|z|^2
+
+    let mag = this.abs() ** 2;
+
+    let r = this.re / mag;
+    let i = -this.im / mag;
+
+    return new Complex(r, i);
+  }
+
+  div(other) {
+    // divide this with the other and return result
+    return this.mul(other.inv());
+  }
+
+  lerp(other, frac) {
+    // lerp the real and complex part separately
+    // and return the number.
+    let re = lerp(this.re, other.re, frac);
+    let im = lerp(this.im, other.im, frac);
+    return new Complex(re, im);
+  }
+
+  lerpPolar(other, frac) {
+    // instead of lerping real and imaginary, this function lurps
+    // between the magnitude and the argument of the numbers
+    let m1 = this.mag(),
+      m2 = other.mag();
+    let a1 = this.arg(),
+      a2 = other.arg();
+
+    // if they are close, then instead of doing a full circle, take the anti-clockwise part
+    if (a1 > a2) a2 += 2 * PI;
+
+    let r = lerp(m1, m2, frac);
+    let theta = lerp(a1, a2, frac);
+    // print(theta);
+
+    return Complex.fromPolar(r, theta);
+  }
+
+  static fromPolar(r, theta) {
+    // this function takes r and theta as input and
+    // returns the complex number of the form
+    // r.e^(i*theta)
+    return new Complex(r * cos(theta), r * sin(theta));
+  }
+}
+
+function f(z) {
+  // the  function we are visualizing
+  return z.mul(new Complex(0, 1));
+}
+
+function renderPoints(points, col, label) {
+  strokeWeight(6);
+  for (let p of points) {
+
+    stroke(col);
+    point(p.re, -p.im);
+    if (label) {
+      
+      // display the cartesian coordinates
+      let a = p.re.toFixed(2);
+      let b = p.im.toFixed(2);
+
+      // polar form
+      // let a = p.mag().toFixed(2);
+      // let b = p.arg().toFixed(2);
+      noStroke();
+      text(a + "+i" + b,
+        p.re + 5, -p.im);
+    }
+  }
+}
+
+function mousePressed() {
+  // per mouse press, add the current point to the points array
+  let c = new Complex(mouseX - width / 2, -mouseY + height / 2);
+  fillPoint(c);
+}
+
+function fillPoint(z) {
+  
+  // function responsible for adding the point to the array
+  // and also computed value of the point and reseting the
+  // temp points array
+  
+  points.push(z);
+  let nz = f(z);
+  mappedPoints.push(nz);
+
+  tempPoints = points.slice();
+}
+
+function autoFillPoints() {
+  // auto fill the grid with points
+  let req = width / 2 / spacing + 1;
+  // fillPoint(new Complex(0, 0));
+  for (let i = 0; i < req; i++) {
+    for (let j = 0; j < req; j++) {
+      let x = i * spacing;
+      let y = j * spacing;
+      fillPoint(new Complex(x, y));
+      fillPoint(new Complex(-x, y));
+      fillPoint(new Complex(x, -y));
+      fillPoint(new Complex(-x, -y));
+    }
+  }
+}
