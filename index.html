@@ -13,11 +13,23 @@
     
     <h2>COMPLEX TRANSFORMATION VISUALIZER </h2>
     <h4>(IN PROGRESS)</h4>
-    
-    <span id="settings">
-      
-    </span>
 
+    <div>
+      <label for="canvasSize">Canvas Size
+        <input type="number" id="canvasSize" value="600" min="400" max="800">
+      </label>
+      <label for="autofill">autofill
+        <input type="checkbox" id="autofill">
+      </label>
+      <label for="gridSpacing">Grid Spacing</label>
+      <input type="number" max="30" min="5" id="gridSpacing" value="20">
+
+      <label for="limits">Limits</label>
+      <input type="number" min="1" max="10" value="2">
+      
+      <label for="lerpType">Interpolation</label>
+      <input type="radio" id="lerpType">
+    </div>
   
 
 </body></html>
