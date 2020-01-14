@@ -129,7 +129,7 @@ class Complex {
 
 function f(z) {
   // the  function we are visualizing
-  return z.mul(new Complex(0, 1));
+  return z.mul(z).mul(z);
 }
 
 function renderPoints(points, col, label) {
@@ -144,7 +144,7 @@ function renderPoints(points, col, label) {
 
     point(x, -y);
     if (label) {
-      
+
       // display the cartesian coordinates
       let a = p.re.toFixed(2);
       let b = p.im.toFixed(2);
@@ -169,11 +169,11 @@ function mousePressed() {
 }
 
 function fillPoint(z) {
-  
+
   // function responsible for adding the point to the array
   // and also computed value of the point and reseting the
   // temp points array
-  
+
   points.push(z);
   let nz = f(z);
   mappedPoints.push(nz);
@@ -200,11 +200,13 @@ function autoFillPoints() {
 
 function clearPoints(){
 
-  // Clear all the points 
+  // Clear all the points
 
   points = [];
   tempPoints = [];
   mappedPoints = [];
+
+  config.autoFill = false;
 
 }
 
@@ -213,5 +215,10 @@ function keyPressed(){
   if (key == 'c'){
     clearPoints();
     config.autoFill = false;
+  } else if( key == 's') {
+      saveCanvas(canv, 'frame', 'png');
+  } else {
+    let elem = document.getElementById("canvasSize");
+    print(elem.value);
   }
 }

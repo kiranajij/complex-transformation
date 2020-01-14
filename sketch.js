@@ -19,49 +19,55 @@ let config =
   lerp: "linear",
   autoFill: true,
   canvasSize: 500,
-  spacing: 20,
-  limits: 2,
-
+  spacing: 10,
+  limits: 1,
+  animationSpeed: 0.1
 }
 
+let canv;
 
 function setup() {
-  createCanvas(config.canvasSize, config.canvasSize);
-  
+  canv = createCanvas(config.canvasSize, config.canvasSize);
+
   // if set autofill, call autoFillPoints()
   if (config.autoFill){
     autoFillPoints();
   }
+
+  let cb_autofill = document.getElementById("autofill");
+  cb_autofill.checked = config.autoFill;
+
 }
 
 function draw() {
-  
+
   // setting up canvas
   background(220);
   translate(width/2, height/2);
-  
+
   // adding the grid
   createGrid();
-  
+
   // render the points if autofill is not set
   if (!config.autoFill){
     renderPoints(points, color(0, 150), true);
   }
-  
+
   // lerp the points
+  let sp = config.animationSpeed;
   if (config.lerp === "polar"){
     for (let i=0; i<points.length; i++){
-      let np = tempPoints[i].lerpPolar(mappedPoints[i], 0.1);
+      let np = tempPoints[i].lerpPolar(mappedPoints[i], sp);
       tempPoints[i] = np;
     }
   } else if (config.lerp ==="linear"){
     for (let i=0; i<points.length; i++){
-      let np = tempPoints[i].lerp(mappedPoints[i], 0.1);
+      let np = tempPoints[i].lerp(mappedPoints[i], sp);
       tempPoints[i] = np;
     }
   }
 
   // render the lerped points
   renderPoints(tempPoints, color(200, 10, 10, 150), false);
-  
-} 
+
+}
