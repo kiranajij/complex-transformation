@@ -1,6 +1,7 @@
 function onChangeCanvasSize(val){
     let nSize = int(val);
     config.canvasSize = nSize;
+    canv.resize(nSize, nSize);
 }
 
 function onChangeGridSpacing(val){
@@ -20,8 +21,19 @@ function onChangeAutofill(){
         clearPoints();
         autoFillPoints();
         config.autoFill = true;
+        doms.autofill.checked = true;
     } else {
         clearPoints();
         config.autoFill = false;
+        doms.autofill.checked = false;
     }
+}
+
+function mouseInCanvas(x, y){
+    if (x < width  && x > 0 && y> 0 && y< height){
+        return true;
+    } else {
+        return false;
+    }
+
 }

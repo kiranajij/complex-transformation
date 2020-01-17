@@ -5,7 +5,7 @@
 
   <script src="p5.js"></script>
     <script src="p5.sound.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
     <meta charset="utf-8">
     <!-- <link rel="stylesheet" type="text/css" href="mstyle.css"> -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"type="text/css">
@@ -30,6 +30,9 @@
              <div class="row p-0 m-0" >
              <div class="col-md-6 ml-auto in" >
              <label for="canvasSize " class="a">Canvas Size</label>
+      <!-- paragraph to show the number -->
+      <p id="currentNumber"></p>
+
       <!-- canvas size -->
       <input type="number" class="b" id="canvasSize" value="600" min="400" max="800" onchange="onChange(this.value);">
       

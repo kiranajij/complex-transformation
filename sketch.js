@@ -16,12 +16,18 @@ otherwise, user can enter new points
 
 let config =
 {
-  lerp: "linear",
+  lerp: "polar",
   autoFill: true,
   canvasSize: 500,
   spacing: 10,
   limits: 1,
-  animationSpeed: 0.1
+  animationSpeed: 0.1,
+  points: null
+}
+
+let doms = {
+  autofill: null,
+  currentNumber: null
 }
 
 let canv;
@@ -34,8 +40,22 @@ function setup() {
     autoFillPoints();
   }
 
-  let cb_autofill = document.getElementById("autofill");
-  cb_autofill.checked = config.autoFill;
+  config.points = {
+    initialColor: color(0, 150),
+    finalColor: color(200, 10, 10, 150),
+    initialLabel: true,
+    finalLabel: false,
+    initialWidth: 6,
+    finalWidth: 6
+  }
+
+  doms.autofill = document.getElementById("autofill");
+  doms.autofill.checked = config.autoFill;
+  doms.currentNumber = document.getElementById("currentNumber");
+  print(doms.currentNumber);
+
+  let z = new Complex(0, PI);
+  print(z.exp());
 
 }
 
@@ -48,9 +68,17 @@ function draw() {
   // adding the grid
   createGrid();
 
+  // changing the current number paragraph
+  doms.currentNumber.innerHTML = mapMouseToComplex().toString();
+  // print(mapMouseToComplex().toString());
+
   // render the points if autofill is not set
   if (!config.autoFill){
-    renderPoints(points, color(0, 150), true);
+
+    let col = config.points.initialColor;
+    let isLabel = config.points.initialLabel;
+
+    renderPoints(points, col, isLabel);
   }
 
   // lerp the points
@@ -68,6 +96,8 @@ function draw() {
   }
 
   // render the lerped points
-  renderPoints(tempPoints, color(200, 10, 10, 150), false);
+  let col = config.points.finalColor;
+  let isLabel = config.points.finalLabel;
+  renderPoints(tempPoints, col, isLabel);
 
 }

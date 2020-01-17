@@ -119,6 +119,19 @@ class Complex {
     return Complex.fromPolar(r, theta);
   }
 
+  toString(){
+    let re = this.re.toFixed(2);
+    let im = this.im.toFixed(2);
+
+    return re + "+ " + im + "i";
+  }
+
+  exp(){
+    let c1 = exp(this.re);
+    let c2 = this.im;
+    return Complex.fromPolar(c1, c2);
+  }
+
   static fromPolar(r, theta) {
     // this function takes r and theta as input and
     // returns the complex number of the form
@@ -129,11 +142,12 @@ class Complex {
 
 function f(z) {
   // the  function we are visualizing
-  return z.mul(z).mul(z);
+  // f(z) = z**2 + 1
+  return new Complex(z.mag(), 0);
 }
 
 function renderPoints(points, col, label) {
-  strokeWeight(6);
+  strokeWeight(config.points.initialWidth);
   for (let p of points) {
 
     stroke(col);
@@ -161,11 +175,10 @@ function renderPoints(points, col, label) {
 
 function mousePressed() {
   // per mouse press, add the current point to the points array
-  let limits = config.limits
-  let re = map(mouseX, 0, width, -limits, limits)
-  let im = map(mouseY, 0, height, limits, -limits)
-  let c = new Complex(re, im);
-  fillPoint(c);
+  if (mouseInCanvas(mouseX, mouseY)){;
+    let c = mapMouseToComplex();
+    fillPoint(c);
+  }
 }
 
 function fillPoint(z) {
@@ -207,6 +220,7 @@ function clearPoints(){
   mappedPoints = [];
 
   config.autoFill = false;
+  doms.autofill.checked = false;
 
 }
 
@@ -221,4 +235,11 @@ function keyPressed(){
     let elem = document.getElementById("canvasSize");
     print(elem.value);
   }
+}
+
+function mapMouseToComplex(){
+  let limits = config.limits;
+  let cpx = map(mouseX, 0, width, -limits, limits);
+  let cpy = map(mouseY, 0, height, limits, -limits);
+  return new Complex(cpx, cpy);
 }
